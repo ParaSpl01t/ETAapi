@@ -1,0 +1,373 @@
+{
+	"name": "ETA api",
+	"version": 0.1,
+	"root": "http://0.0.0.0:7000",
+	"routes": {
+		"admin": [
+			{
+				"name": "Admin Login",
+				"path": "/admin/login",
+				"description": "Give correct Mobile no. and passsword and get $adminkey for admin.",
+				"method": "post",
+				"request": {
+					"headers": [
+						"Make sure that to use JSON headers.",
+						{
+							"content-type": "application/json"
+						}
+					],
+					"body": [
+						"Use correct admin mobile no. and password in place of $mobile and $password",
+						{
+							"mobile": "$mobile",
+							"password": "$password"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "Success response is returned when Mobile and Password are correct.",
+						"tip": "save the 'adminkey' for later use.",
+						"data": {
+							"status": "success",
+							"msg": "Logged in",
+							"adminkey": "$adminkey"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned if any one of 'mobile' or 'password' is missing.",
+						"data": {
+							"status": "error",
+							"msg": "Incomplete data"
+						}
+					},
+					"error 2": {
+						"type": "error",
+						"description": "This response is returned when Mobile and password are incorrect",
+						"data": {
+							"status": "error",
+							"msg": "Invalid mobile no. or password"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create users",
+				"path": "/admin/create",
+				"description": "Create new user with Mobile no. and password.",
+				"method": "post",
+				"request": {
+					"headers": [
+						"Make sure that to use JSON headers. Also, use the $adminkey previously stored from 'Admin Login' response",
+						{
+							"content-type": "application/json",
+							"adminkey": "$adminkey"
+						}
+					],
+					"body": [
+						"Use new mobile no. and password in place of $mobile and $password for the user you want to create",
+						{
+							"mobile": "$mobile",
+							"password": "$password"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "This response is returned when user is created without issue.",
+						"data": {
+							"status": "success",
+							"msg": "User created"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned when the mobile no. provided already exist in database.",
+						"data": {
+							"status": "error",
+							"msg": "User already exist."
+						}
+					}
+				}
+			}
+		],
+		"user": [
+			{
+				"name": "User Login",
+				"path": "/login",
+				"description": "Give correct Mobile no. and passsword and get $authkey.",
+				"method": "post",
+				"request": {
+					"headers": [
+						"Make sure that to use JSON headers.",
+						{
+							"content-type": "application/json"
+						}
+					],
+					"body": [
+						"Use correct user mobile no. and password in place of $mobile and $password",
+						{
+							"mobile": "$mobile",
+							"password": "$password"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "This response is returned when Mobile and Password are correct.",
+						"tip": "save the 'authkey' for later use.",
+						"data": {
+							"status": "success",
+							"msg": "Logged in",
+							"authkey": "$authkey"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned when Mobile and password are incorrect",
+						"data": {
+							"status": "error",
+							"msg": "Invalid mobile no. or password"
+						}
+					},
+					"error 2": {
+						"type": "error",
+						"description": "This response is returned when Mobile no. is not 10 digits long",
+						"data": {
+							"status": "error",
+							"msg": "10 digits mobile no. is required"
+						}
+					}
+				}
+			},
+			{
+				"name": "User authkey check",
+				"path": "/check",
+				"description": "Check if the authkey is valid. This is used to auto login.",
+				"method": "post",
+				"request": {
+					"headers": [
+						"Make sure that to use JSON headers. Also, use the $authkey previously stored from 'User Login' response",
+						{
+							"content-type": "application/json",
+							"authkey": "$authkey"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "This response is returned when $authkey is valid.",
+						"tip": "skip the login page if you get this repsonse.",
+						"data": {
+							"status": "success",
+							"msg": "Valid authkey"
+						}
+					},
+					"error": {
+						"type": "error",
+						"description": "This response is returned when $authkey is invalid.",
+						"tip": "Show the login page.",
+						"data": {
+							"status": "error",
+							"msg": "Invalid authkey"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create New Entry",
+				"path": "/entry",
+				"description": "Used to create new entry in the database. This entry is specific to user's mobile no.",
+				"method": "post",
+				"request": {
+					"headers": [
+						"Make sure that to use JSON headers. Also, use the $authkey previously stored from 'User Login' response",
+						{
+							"content-type": "application/json",
+							"authkey": "$authkey"
+						}
+					],
+					"body": [
+						"Use appropriate values for $amount and $description, $type can either be 'credit' or 'debit'",
+						{
+							"amount": "$amount",
+							"description": "$description",
+							"type": "$type"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "This response is returned when the entry is created.",
+						"tip": "Refresh the page or load updated data after this.",
+						"data": {
+							"status": "success",
+							"msg": "New entry created"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned when $authkey is invalid.",
+						"tip": "Show the login page.",
+						"data": {
+							"status": "error",
+							"msg": "Invalid authkey"
+						}
+					},
+					"error 2": {
+						"type": "error",
+						"description": "This response is returned if any one of 'amount', 'description' or 'type' is missing.",
+						"data": {
+							"status": "error",
+							"msg": "Incomplete data"
+						}
+					}
+				}
+			},
+			{
+				"name": "Get All Entries",
+				"path": "/entry",
+				"description": "Used to get all entries for the user as an array of objects. These entries are specific to user's mobile no.",
+				"method": "get",
+				"request": {
+					"headers": [
+						"Use the $authkey previously stored from 'User Login' response",
+						{
+							"authkey": "$authkey"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "These response is returned when $authkey is valid. The entries are saved as array in 'entry' key. The array can be empty if there are no entries or contain multiple objects.",
+						"tip": "may need to loop over 'entry' values",
+						"data": {
+							"status": "success",
+							"msg": "New entry created",
+							"entry": [
+								{
+									"id": "$id <i>auto generated</i>",
+									"amount": "$amount",
+									"description": "$description",
+									"type": "$type",
+									"date": "$date <i>auto generated</i>"
+								}
+							]
+						}
+					},
+					"error": {
+						"type": "error",
+						"description": "This response is returned when $authkey is invalid.",
+						"data": {
+							"status": "error",
+							"msg": "Invalid authkey"
+						}
+					}
+				}
+			},
+			{
+				"name": "Edit An Entry",
+				"path": "/entry",
+				"description": "Used to edit an entry using it's 'id'",
+				"method": "patch",
+				"request": {
+					"headers": [
+						"Use the $authkey previously stored from 'User Login' response",
+						{
+							"content-type": "application/json",
+							"authkey": "$authkey"
+						}
+					],
+					"body": [
+						"$id is recieved from the response of 'Get All Entries'.",
+						{
+							"id": "$id",
+							"amount": "$amount",
+							"description": "$description",
+							"type": "$type"
+						}
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "These response is returned when entry is updated successfully.",
+						"tip": "Refresh the page or load updated data after this.",
+						"data": {
+							"status": "success",
+							"msg": "Entry updated"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned when $authkey is invalid.",
+						"data": {
+							"status": "error",
+							"msg": "Invalid authkey"
+						}
+					},
+					"error 2": {
+						"type": "error",
+						"description": "This response is returned if any one of 'id', 'amount', 'description' or 'type' is missing.",
+						"data": {
+							"status": "error",
+							"msg": "Incomplete data"
+						}
+					}
+				}
+			},
+			{
+				"name": "Delete Entry",
+				"path": "/entry",
+				"description": "Used to detete a specific entry by 'id'. the entry you want to delete must specific to user's mobile no.",
+				"method": "delete",
+				"request": {
+					"headers": [
+						"Use the $authkey previously stored from 'User Login' response",
+						{
+							"authkey": "$authkey"
+						}
+					],
+					"query": [
+						"$id is the id of the entry you want to delete. This id is recieved from the response of 'Get All Entries'.",
+						"?id=$id"
+					]
+				},
+				"response": {
+					"success": {
+						"type": "success",
+						"description": "This response is returned when the entry 'id' you provided in query is deleted.",
+						"tip": "Refresh the page or load updated data after this.",
+						"data": {
+							"status": "success",
+							"msg": "Entry deleted"
+						}
+					},
+					"error 1": {
+						"type": "error",
+						"description": "This response is returned when $authkey is invalid.",
+						"data": {
+							"status": "error",
+							"msg": "Invalid authkey"
+						}
+					},
+					"error 2": {
+						"type": "error",
+						"description": "This response is returned when the $id you provided is already deleted or is invalid",
+						"data": {
+							"status": "error",
+							"msg": "Invalid id"
+						}
+					}
+				}
+			}
+		]
+	}
+}
