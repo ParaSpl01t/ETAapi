@@ -1,7 +1,7 @@
 {
 	"name": "ETA api",
 	"version": 0.1,
-	"root": "http://0.0.0.0:7000",
+	"root": "http://13.235.98.4:7100",
 	"routes": {
 		"admin": [
 			{
