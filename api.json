@@ -181,7 +181,7 @@
 			},
 			{
 				"name": "Create New Entry",
-				"path": "/entry",
+				"path": "/entries",
 				"description": "Used to create new entry in the database. This entry is specific to user's mobile no.",
 				"method": "post",
 				"request": {
@@ -232,7 +232,7 @@
 			},
 			{
 				"name": "Get All Entries",
-				"path": "/entry",
+				"path": "/entries",
 				"description": "Used to get all entries for the user as an array of objects. These entries are specific to user's mobile no.",
 				"method": "get",
 				"request": {
@@ -274,7 +274,7 @@
 			},
 			{
 				"name": "Edit An Entry",
-				"path": "/entry",
+				"path": "/entries",
 				"description": "Used to edit an entry using it's 'id'",
 				"method": "patch",
 				"request": {
@@ -325,7 +325,7 @@
 			},
 			{
 				"name": "Delete Entry",
-				"path": "/entry",
+				"path": "/entries",
 				"description": "Used to detete a specific entry by 'id'. the entry you want to delete must specific to user's mobile no.",
 				"method": "delete",
 				"request": {
